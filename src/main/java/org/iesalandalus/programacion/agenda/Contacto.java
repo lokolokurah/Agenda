@@ -41,13 +41,17 @@ public class Contacto
      private void setNombre(String nombre) {
         
         boolean contactoCreado = false;
+        if (this.nombre ==null)
+            {
+            throw new IllegalArgumentException(" El nombre de un contacto no puede ser nulo o vacío. " );
+        }
         if (this.nombre != null) {
             contactoCreado = true;
         }
         if (nombre != null && nombre.equals("") && contactoCreado != true) {
             this.nombre = nombre;
         } else {
-            throw new IllegalArgumentException(" El nombre un contacto no puede ser nulo o vacío. ");
+            throw new IllegalArgumentException(" El nombre de un contacto no puede ser nulo o vacío. ");
         }
     }
      
@@ -57,18 +61,15 @@ public class Contacto
      
      public void setTelefono(String telefono) {
         
-        if (telefono != null && telefono.equals(""))
-            if(Pattern.matches(ER_TELEFONO, telefono))
-            {
-                this.telefono = telefono;
-            }else
-            {
-            throw new IllegalArgumentException(" El teléfono de un contacto no puede ser nulo o vacío. ");
-            }   
-        else 
-        {
-        throw new IllegalArgumentException(" El teléfono no tiene un formato válido. ");
-        }
+        if ( telefono == null || telefono.equals("")) {
+			throw new IllegalArgumentException(" El teléfono de un contacto no puede ser nulo o vacío. ");
+		} else {
+			if (Pattern.matches(ER_TELEFONO,telefono)) {
+				this.telefono = telefono;
+			}else{
+				throw new IllegalArgumentException(" El teléfono no tiene un formato válido. ");
+			}
+		}
         
     }
      public String getCorreo() {
@@ -79,24 +80,20 @@ public class Contacto
          /*Para la validación de correo electronico voy usar  el método estático 
          compile de la clase Pattern que permite crear expresión 
          regular o patrón.*/
-             if (correo != null && correo.equals("")) 
-                if (Pattern.matches(ER_CORREO, correo))
-                {
-                this.correo = correo;
-                } 
-                else 
-                {
+             if (correo == null || correo.equals("")) {
+            throw new IllegalArgumentException(" El correo de un contacto no puede ser nulo o vacío. ");
+        } else {
+            if (Pattern.matches(ER_CORREO,correo)) {
+		this.correo = correo;
+            }else { 
                 throw new IllegalArgumentException(" El correo no tiene un formato válido. ");
-                }
-            else 
-            {
-            throw new IllegalArgumentException(" El teléfono no tiene un formato válido. ");
-            }
-        } 
+            } 
+             }
+     }
      
-     @Override
+    @Override
     public String toString() {
-        return "Contacto{" + "nombre=" + nombre + ", telefono=" + telefono + ", correo=" + correo + '}';
+        return getIniciales()+" ["+telefono+"," +correo+"]";
     }
     
     public String getIniciales()
