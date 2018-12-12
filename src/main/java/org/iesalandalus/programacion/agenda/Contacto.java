@@ -15,18 +15,12 @@ import java.util.regex.Pattern;
 //Clase contacto + Atributos
 public class Contacto 
 {
-    private static final String ER_TELEFONO="[69][0-9]{8}";
-    private static final String ER_CORREO="^[_A-Za-z0-9-\\\\+]+(\\\\.[_A-Za-z0-9-]+)*@\" + \"[A-Za-z0-9-]+(\\\\.[A-Za-z0-9]+)*(\\\\.[A-Za-z]{2,4})$";
+    private final String ER_TELEFONO="[69][0-9]{8}";
+    private final String ER_CORREO="([a-zA-z0-9.-_]{1,})(\\@[a-zA-z]{1,})(\\.[a-z]{2,3})";
     private String nombre;
     private String telefono;
     private String correo;
-    private String iniciales;
-    /**
-     * 
-     * @param nombre
-     * @param telefono
-     * @param correo 
-     */
+ 
     public Contacto(String nombre, String telefono, String correo)
     {
         setNombre(nombre);
@@ -39,20 +33,12 @@ public class Contacto
     }
      
      private void setNombre(String nombre) {
-        
-        boolean contactoCreado = false;
-        if (this.nombre ==null)
-            {
-            throw new IllegalArgumentException(" El nombre de un contacto no puede ser nulo o vacío. " );
-        }
-        if (this.nombre != null) {
-            contactoCreado = true;
-        }
-        if (nombre != null && nombre.equals("") && contactoCreado != true) {
-            this.nombre = nombre;
-        } else {
-            throw new IllegalArgumentException(" El nombre de un contacto no puede ser nulo o vacío. ");
-        }
+       if (nombre == null || nombre.length()<1) { throw new IllegalArgumentException("El nombre de un contacto no puede ser nulo o vacío.");}
+ 
+                {
+                   this.nombre = nombre; 
+                   this.nombre = nombre.replaceAll("\\s{2,}", " ").trim(); 
+                }  
     }
      
      public String getTelefono() {
@@ -60,84 +46,74 @@ public class Contacto
     }
      
      public void setTelefono(String telefono) {
-        
-        if ( telefono == null || telefono.equals("")) {
-			throw new IllegalArgumentException(" El teléfono de un contacto no puede ser nulo o vacío. ");
-		} else {
-			if (Pattern.matches(ER_TELEFONO,telefono)) {
-				this.telefono = telefono;
-			}else{
-				throw new IllegalArgumentException(" El teléfono no tiene un formato válido. ");
-			}
-		}
-        
+        if (telefono == null || telefono.length()<1) { throw new IllegalArgumentException("El teléfono de un contacto no puede ser nulo o vacío.");}
+        else if (telefono.matches(ER_TELEFONO))
+                {
+                   this.telefono = telefono; 
+                 }  
+         else 
+                 {
+                     throw new IllegalArgumentException("El teléfono no tiene un formato válido.");
+                 }
     }
      public String getCorreo() {
         return correo;
     }
      
      public void setCorreo(String correo) {
-         /*Para la validación de correo electronico voy usar  el método estático 
-         compile de la clase Pattern que permite crear expresión 
-         regular o patrón.*/
-             if (correo == null || correo.equals("")) {
-            throw new IllegalArgumentException(" El correo de un contacto no puede ser nulo o vacío. ");
-        } else {
-            if (Pattern.matches(ER_CORREO,correo)) {
-		this.correo = correo;
-            }else { 
-                throw new IllegalArgumentException(" El correo no tiene un formato válido. ");
-            } 
-             }
+         if (correo == null || correo.length()<1) { throw new IllegalArgumentException("El correo de un contacto no puede ser nulo o vacío."); }
+         else if (correo.matches(ER_CORREO))
+                 {
+                     this.correo = correo;
+                 }
+         else 
+                 {
+                     throw new IllegalArgumentException("El correo no tiene un formato válido.");
+  
+                 } 
      }
      
-    @Override
+     @Override
     public String toString() {
-        return getIniciales()+" ["+telefono+"," +correo+"]";
+        String iniciales = getIniciales(nombre.toUpperCase());
+        return iniciales+" ["+telefono + ", " + correo + ']';     
     }
     
-    public String getIniciales()
+    public String getIniciales(String nombre)
     {
-        return iniciales;
+        String []palabra=nombre.split(" ");
+         String iniciales="";
+         for (int i=0;i<palabra.length;i++)
+             
+         {iniciales+=palabra[i].charAt(0);}
+         return iniciales;
     }
-     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.nombre);
-        hash = 59 * hash + Objects.hashCode(this.telefono);
-        hash = 59 * hash + Objects.hashCode(this.correo);
-        return hash;
-    }
+    
+      @Override
+     public int hashCode() {
+         int hash = 3;
+         hash = 53 * hash + Objects.hashCode(this.nombre);
+         hash = 53 * hash + Objects.hashCode(this.telefono);
+         hash = 53 * hash + Objects.hashCode(this.correo);
+         return hash;
+     }
+    
      @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Contacto other = (Contacto) obj;
-        if (nombre == null)
-        {
-            if(other.nombre != null)
-                return false;
-        }
-        else if(!nombre.equalsIgnoreCase(other.nombre))
-        {return false;
-        }
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        
-        if (!Objects.equals(this.telefono, other.telefono)) {
-            return false;
-        }
-        if (!Objects.equals(this.correo, other.correo)) {
-            return false;
-        }
-        return true;
+         if (this == obj) {
+             return true;
+         }
+         if (obj == null) {
+             return false;
+         }
+         if (getClass() != obj.getClass()) {
+             return false;
+         }
+         final Contacto other = (Contacto) obj;
+         if (!Objects.equals(this.nombre.toUpperCase(), other.nombre.toUpperCase())) {
+             return false;
+         }
+ 
+         return true;
     }
 }

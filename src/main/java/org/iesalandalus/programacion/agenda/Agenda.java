@@ -27,7 +27,7 @@ public class Agenda
         contactos = new Contacto[MAX_CONTACTOS];
     }
      
-     public void añadir(Contacto contacto )
+     public void anadir(Contacto contacto)
         {
              int indice;
              try {
@@ -35,7 +35,7 @@ public class Agenda
                 if(indiceNoSuperaTamano(indice)) {
                     this.contactos[indice] = contacto;
                 } else {
-                    System.out.println(" El array está lleno ");
+                    throw new IllegalArgumentException( " El array está lleno " );
                 }
                 } catch (OperationNotSupportedException e) {
                     System.out.println(" Operación  no soportada ");
@@ -67,10 +67,18 @@ public class Agenda
             if (i<MAX_CONTACTOS)
                 return true;
            else
-                return false;
-            
+                return false;     
         }
         
+        public Agenda buscar(Contacto contacto)
+        {
+            contacto.getNombre();
+            if(contacto.getNombre()!=null)
+                    {
+                        System.out.println(contacto);
+                    }
+        return null;
+        }
     
     public Agenda(int numContactos)
     {        
