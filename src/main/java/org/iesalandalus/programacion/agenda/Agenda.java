@@ -13,90 +13,115 @@ import javax.naming.OperationNotSupportedException;
  */
 //Creada la clase Agenda + Atributos
 public class Agenda 
-{
-    private static final String MENSAJE_EXCEPCION = " Debería haber saltado la excepción. ";
-    private static final String MENSAJE_NO_EXCEPCION = " No debería haber saltado la excepción. ";
-    
-    private static final int MAX_CONTACTOS = 5; 
-    private int numContactos; 
-    private Contacto [] contactos;
+{   
+    private static final int MAX_CONTACTOS = 10; 
+    private int numContactos=0; 
+    private Contacto [] agenda=null;
     
     //P.dfcto
-     public Agenda()
+    public Agenda()
     {
-        contactos = new Contacto[MAX_CONTACTOS];
+        numContactos=10;  
+        agenda = new Contacto[MAX_CONTACTOS];
     }
-     
-     public void anadir(Contacto contacto)
-        {
-             int indice;
-             try {
-                indice = buscarPrimerIndiceComprobandoExistencia(contacto);
-                if(indiceNoSuperaTamano(indice)) {
-                    this.contactos[indice] = contacto;
-                } else {
-                    throw new IllegalArgumentException( " El array está lleno " );
-                }
-                } catch (OperationNotSupportedException e) {
-                    System.out.println(" Operación  no soportada ");
-                    e.getMessage();
-                }   
-        }
-            
-        private int buscarPrimerIndiceComprobandoExistencia(Contacto contacto) throws OperationNotSupportedException
-        {
-            int indice=0;
-            boolean encontradoContacto=false;
-             for(int i=0;i<contactos.length && !encontradoContacto;i++)
-            {
-                if (contactos[i]==null)
-                {
-                    encontradoContacto=true;
-                    indice = i;
-                }
-                else if (contactos[i].equals(contacto))
-                {
-                    throw new OperationNotSupportedException(" Ya existe un contacto con ese nombre. ");
-                }               
-            }
-             return indice;
-        }
-        
-         private boolean indiceNoSuperaTamano(int i)
-        {
-            if (i<MAX_CONTACTOS)
-                return true;
-           else
-                return false;     
-        }
-        
-        public Agenda buscar(Contacto contacto)
-        {
-            contacto.getNombre();
-            if(contacto.getNombre()!=null)
-                    {
-                        System.out.println(contacto);
-                    }
-        return null;
-        }
     
-    public Agenda(int numContactos)
-    {        
-        if (numContactos>0)
-        {
-            this.numContactos = numContactos;
+    public Contacto[] getContactos()
+     {
+ 
+         Contacto[] copiaAgenda = agenda.clone();
+        
+         return copiaAgenda;
+     }      
+     
+    public int getNumContactos() {
+         numContactos=0;
+         for (int i=0;i<agenda.length;i++)
+         {
+             numContactos++;
          }
-        else
-            throw new IllegalArgumentException(" ERROR: Ha introducido un número de páginas no válido ");
-        }
-    
-     public int getNumContactos() {
-        return numContactos;
-    }
+         return numContactos;
+     }
      
-     //Get que devuelve una copia del array de contactos
-    public Contacto[] getContacto() {
-        return this.contactos;
+    public void añadir(Contacto contacto) throws OperationNotSupportedException
+     {
+         
+         int i;
+                 
+            try  {i=buscarPrimerIndiceComprobandoExistencia(contacto);
+            
+                 if (indiceNoSuperaTamano(i))
+                 {
+                 this.agenda[i] = contacto;
+                 }
+         
+                 else
+                     
+                 { throw new OperationNotSupportedException("El array de contactos está lleno.");}
+                 
+                 }catch (OperationNotSupportedException e) {
+                     System.out.println("Ya existe un contacto con ese nombre.");
+                     e.getMessage();} 
+         
+     }    
+            
+    private int buscarPrimerIndiceComprobandoExistencia(Contacto contactoYaExistente) throws OperationNotSupportedException
+     {
+         int indiceLibre=0;
+         boolean encontradoContacto=false;
+         
+         for(int i=0;i<agenda.length && !encontradoContacto;i++)
+         {
+             if (agenda[i]==null)
+             {
+                 encontradoContacto=true;
+                 indiceLibre=i;
+             }
+             else if (agenda[i].equals(contactoYaExistente))
+             {
+                 throw new OperationNotSupportedException("Ya existe un contacto con ese nombre.");
+             }               
+         }
+         
+         return indiceLibre;
+     }
+    
+    private boolean indiceNoSuperaTamano(int i) {
+ 
+         boolean noSuperaTamano = false;
+         if (i < MAX_CONTACTOS) {
+             noSuperaTamano = true;
+         } else {
+             noSuperaTamano = false;
+         }
+         return noSuperaTamano;
+     }
+    
+    public Contacto buscar(String nombre) {
+ 
+         int i;
+         Contacto aBuscar = null;
+         i = buscarIndiceCliente(nombre);
+         if (i < MAX_CONTACTOS+1) {
+             aBuscar = agenda[i];
+             System.out.println("El contacto encontrado: " + nombre);
+             return aBuscar;
+         } else {
+             System.out.println("No se encuentra el contacto");
+         }
+         return aBuscar;
+     }
+    
+    private int buscarIndiceCliente(String cliente) {
+ 
+         
+         int i = 0;
+         for (Contacto contacto:agenda) {
+             if (contacto.getNombre().equals(cliente)) {
+                 return i;
+             }
+            i++;
+        }
+            return MAX_CONTACTOS+1;
     }
-
+    
 }
