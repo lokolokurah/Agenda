@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class Contacto 
 {
     private final String ER_TELEFONO="[69][0-9]{8}";
-    private final String ER_CORREO="([a-zA-z0-9.-_]{1,})(\\@[a-zA-z]{1,})(\\.[a-z]{2,3})";
+    private final String ER_CORREO="([a-zA-z0-9.-_]{1,})(\\@[a-zA-z]{1,})(\\.[a-z]{1,3})";
     private String nombre;
     private String telefono;
     private String correo;
@@ -34,7 +34,6 @@ public class Contacto
      
      private void setNombre(String nombre) {
        if (nombre == null || nombre.length()<1) { throw new IllegalArgumentException("El nombre de un contacto no puede ser nulo o vacío.");}
- 
                 {
                    this.nombre = nombre; 
                    this.nombre = nombre.replaceAll("\\s{2,}", " ").trim(); 
@@ -75,7 +74,7 @@ public class Contacto
      @Override
     public String toString() {
         String iniciales = getIniciales(nombre.toUpperCase());
-        return iniciales+" ["+telefono + ", " + correo + ']';     
+        return iniciales+" ["+telefono + ", " + correo + "]";     
     }
     
     public String getIniciales(String nombre)

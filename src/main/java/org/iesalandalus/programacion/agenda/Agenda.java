@@ -6,6 +6,7 @@
 package org.iesalandalus.programacion.agenda;
 
 import javax.naming.OperationNotSupportedException;
+import utilidades.Entrada;
 
 /**
  *
@@ -20,8 +21,7 @@ public class Agenda
     
     //P.dfcto
     public Agenda()
-    {
-        numContactos=10;  
+    { 
         agenda = new Contacto[MAX_CONTACTOS];
     }
     
@@ -33,7 +33,7 @@ public class Agenda
      
     public int getNumContactos() {
          numContactos=0;
-         for (int i=0;i<agenda.length;i++)
+         for (int i=0;i<agenda.length && agenda[i]!=null;i++)
          {
              numContactos++;
          }
@@ -43,16 +43,19 @@ public class Agenda
     public void anadir(Contacto contacto) throws OperationNotSupportedException
      {  
          int i; 
-            try  {i=buscarPrimerIndiceComprobandoExistencia(contacto);
+            try  {
+                i=buscarPrimerIndiceComprobandoExistencia(contacto);
+                }
+           catch(OperationNotSupportedException e)
+                {
+                throw new OperationNotSupportedException("Ya existe un contacto con ese nombre.");
+                }
                  if (indiceNoSuperaTamano(i))
                  {
                  this.agenda[i] = contacto;
                  }
                  else   
                  { throw new OperationNotSupportedException("El array de contactos está lleno.");}
-                 }catch (OperationNotSupportedException e) {
-                     System.out.println("Ya existe un contacto con ese nombre.");
-                     e.getMessage();} 
      }    
             
     private int buscarPrimerIndiceComprobandoExistencia(Contacto contactoYaExistente) throws OperationNotSupportedException
@@ -85,29 +88,28 @@ public class Agenda
          return noSuperaTamano;
      }
     
-    public Contacto buscar(String nombre) {
+    public Contacto buscar(String nombre)  
+    { 
          int i;
+         i=buscarIndiceCliente(nombre);
          Contacto aBuscar = null;
-         i = buscarIndiceCliente(nombre);
-         if (i < MAX_CONTACTOS+1) {
+         if (i==-1) return null;
+        else
              aBuscar = agenda[i];
-             System.out.println("El contacto encontrado: " + nombre);
+             System.out.println("El contacto se encuentra en la posición "+i);
              return aBuscar;
-         } else {
-             System.out.println("No se encuentra el contacto");
-         }
-         return aBuscar;
      }
     
-    private int buscarIndiceCliente(String cliente) {
-         int i = 0;
-         for (Contacto contacto:agenda) {
-             if (contacto.getNombre().equals(cliente)) {
-                 return i;
-             }
-            i++;
+    private int buscarIndiceCliente(String nombreContacto) 
+    {
+         int indice=-1;
+        
+        for(int i=0;i<agenda.length;i++)
+        {
+            if (agenda[i].getNombre()!=null && agenda[i].getNombre().equals(nombreContacto))
+                return indice=i;            
         }
-            return MAX_CONTACTOS+1;
+        return indice;
     }
     
     public void borrar(String contacto) throws OperationNotSupportedException {   
@@ -122,7 +124,7 @@ public class Agenda
         }
     }
      private void desplazarUnaPosicionHaciaIzquierda(int posicion) {
-        for (int i=posicion; posicion<MAX_CONTACTOS;i++) {
+        for (int i=posicion; posicion<MAX_CONTACTOS -1 && agenda[i] != null;i++) {
             agenda[i] = agenda[i+1];
         }
     } 
