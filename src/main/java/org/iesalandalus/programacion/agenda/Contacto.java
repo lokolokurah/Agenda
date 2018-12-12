@@ -69,7 +69,6 @@ public class Contacto
          else 
                  {
                      throw new IllegalArgumentException("El correo no tiene un formato válido.");
-  
                  } 
      }
      

@@ -16,7 +16,7 @@ public class Agenda
 {   
     private static final int MAX_CONTACTOS = 10; 
     private int numContactos=0; 
-    private Contacto [] agenda=null;
+    private Contacto [] agenda;
     
     //P.dfcto
     public Agenda()
@@ -27,9 +27,7 @@ public class Agenda
     
     public Contacto[] getContactos()
      {
- 
          Contacto[] copiaAgenda = agenda.clone();
-        
          return copiaAgenda;
      }      
      
@@ -42,33 +40,26 @@ public class Agenda
          return numContactos;
      }
      
-    public void añadir(Contacto contacto) throws OperationNotSupportedException
-     {
-         
-         int i;
-                 
+    public void anadir(Contacto contacto) throws OperationNotSupportedException
+     {  
+         int i; 
             try  {i=buscarPrimerIndiceComprobandoExistencia(contacto);
-            
                  if (indiceNoSuperaTamano(i))
                  {
                  this.agenda[i] = contacto;
                  }
-         
-                 else
-                     
+                 else   
                  { throw new OperationNotSupportedException("El array de contactos está lleno.");}
-                 
                  }catch (OperationNotSupportedException e) {
                      System.out.println("Ya existe un contacto con ese nombre.");
                      e.getMessage();} 
-         
      }    
             
     private int buscarPrimerIndiceComprobandoExistencia(Contacto contactoYaExistente) throws OperationNotSupportedException
      {
          int indiceLibre=0;
          boolean encontradoContacto=false;
-         
+     
          for(int i=0;i<agenda.length && !encontradoContacto;i++)
          {
              if (agenda[i]==null)
@@ -81,12 +72,10 @@ public class Agenda
                  throw new OperationNotSupportedException("Ya existe un contacto con ese nombre.");
              }               
          }
-         
          return indiceLibre;
      }
     
     private boolean indiceNoSuperaTamano(int i) {
- 
          boolean noSuperaTamano = false;
          if (i < MAX_CONTACTOS) {
              noSuperaTamano = true;
@@ -97,7 +86,6 @@ public class Agenda
      }
     
     public Contacto buscar(String nombre) {
- 
          int i;
          Contacto aBuscar = null;
          i = buscarIndiceCliente(nombre);
@@ -112,8 +100,6 @@ public class Agenda
      }
     
     private int buscarIndiceCliente(String cliente) {
- 
-         
          int i = 0;
          for (Contacto contacto:agenda) {
              if (contacto.getNombre().equals(cliente)) {
@@ -124,4 +110,20 @@ public class Agenda
             return MAX_CONTACTOS+1;
     }
     
+    public void borrar(String contacto) throws OperationNotSupportedException {   
+        int i;
+        //Usare el metodo de buscarIndiceCliente
+        i = buscarIndiceCliente(contacto);
+        if (i < MAX_CONTACTOS+1) {
+            agenda[i] = null;
+            desplazarUnaPosicionHaciaIzquierda(i);
+        } else {
+            throw new OperationNotSupportedException("El contacto que quieres borrar no existe.");
+        }
+    }
+     private void desplazarUnaPosicionHaciaIzquierda(int posicion) {
+        for (int i=posicion; posicion<MAX_CONTACTOS;i++) {
+            agenda[i] = agenda[i+1];
+        }
+    } 
 }
